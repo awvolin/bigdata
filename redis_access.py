@@ -12,7 +12,6 @@ class Redis_Access:
         )
         
     def insert_album_data(self, artist_id, albums_data):
-        
         # Clear database in testing
         self.r.flushdb()
 
@@ -24,10 +23,11 @@ class Redis_Access:
             print(f'{key}: {value}')
 
         self.r.set(artist_id, albums_json)
-        print("\nAfter adding 'new_key':")
+        
         keys = self.r.keys() 
         for key in keys:
             value = self.r.get(key)  
             print(f'{key}:')
             print(json.dumps(json.loads(value), indent=4))  
+
             

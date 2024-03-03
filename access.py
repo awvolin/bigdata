@@ -44,17 +44,33 @@ class Access:
         return albums_data
 
     def getTracksForAlbum(self, album_id):
-        # pull all tracks for the album
+        # Pull all tracks for the album
         r = requests.get(self.BASE_URL + 'albums/' + album_id + '/tracks',
-                         headers=self.headers,
-                         params={'limit': 50})
+                        headers=self.headers,
+                        params={'limit': 50})
         tracks_data = r.json()
 
         tracks = []
         for track in tracks_data['items']:
+            # Get individual track details to fetch popularity
+            track_id = track['id']
+            track_info = self.getTrack(track_id)
+            if track_info:
+                tracks.append(track_info)
+            return tracks
+    
+    def getTrack(self, track_id):
+        # Get details of an individual track
+        r = requests.get(self.BASE_URL + 'tracks/' + track_id,
+                        headers=self.headers)
+        track_data = r.json()
+
+        if 'name' in track_data and 'artists' in track_data:
             track_info = {
-                'name': track['name'],
-                'artists': [artist['name'] for artist in track['artists']]
+                'name': track_data['name'],
+                'artists': [artist['name'] for artist in track_data['artists']],
+                'popularity': track_data.get('popularity', None)  # Extract popularity field
             }
-            tracks.append(track_info)
-        return tracks
+            return track_info
+        else:
+            return None
