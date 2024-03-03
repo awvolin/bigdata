@@ -2,8 +2,10 @@ import json
 import redis
 
 class Redis_Access:
+    '''Class for accessing Redis database'''
+
     def __init__(self):
-        # Connect to Redis
+        '''Initialize Redis connection'''
         self.r = redis.Redis(
             host='redis-14211.c251.east-us-mz.azure.cloud.redislabs.com',
             port=14211,
@@ -12,6 +14,7 @@ class Redis_Access:
         )
         
     def insert_album_data(self, artist_id, albums_data):
+        '''Insert album data into Redis'''
         # Clear database in testing
         self.r.flushdb()
 
@@ -19,7 +22,7 @@ class Redis_Access:
         self.r.set(artist_id, albums_json)
         
     def getValues(self, key):
-        # Retrieve JSON value for the given key
+        '''Retrieve JSON value for the given key'''
         value = self.r.get(key)
         
         # If value exists, parse JSON and return
