@@ -1,15 +1,33 @@
-# redis_access.py
-import redis
 import json
+import redis
 
-class RedisAccess:
-    def __init__(self, host='localhost', port=6379, db=0):
-        self.redis_client = redis.StrictRedis(host=host, port=port, db=db)
-
+class Redis_Access:
+    def __init__(self):
+        # Connect to Redis
+        self.r = redis.Redis(
+            host='redis-14211.c251.east-us-mz.azure.cloud.redislabs.com',
+            port=14211,
+            password='KGEZypz9ZIucVISoWp9IEijHOKjsjTO2',
+            decode_responses=True  # This ensures that retrieved values are decoded into Python strings
+        )
+        
     def insert_album_data(self, artist_id, albums_data):
-        # Convert albums data to JSON string
+        
+        # Clear database in testing
+        self.r.flushdb()
+
         albums_json = json.dumps(albums_data)
         
-        # Insert JSON data into Redis
-        self.redis_client.set(artist_id, albums_json)
-        print("Album data inserted into Redis successfully.")
+        keys = self.r.keys() 
+        for key in keys:
+            value = self.r.get(key)  
+            print(f'{key}: {value}')
+
+        self.r.set(artist_id, albums_json)
+        print("\nAfter adding 'new_key':")
+        keys = self.r.keys() 
+        for key in keys:
+            value = self.r.get(key)  
+            print(f'{key}:')
+            print(json.dumps(json.loads(value), indent=4))  
+            
