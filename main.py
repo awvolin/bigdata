@@ -31,11 +31,11 @@ def main():
                 tracks = album['tracks']
                 
                 # Calculate average popularity
-                total_popularity = sum(track['popularity'] for track in tracks) / 1000
+                total_popularity = sum(track['popularity'] for track in tracks)
                 average_popularity = total_popularity / len(tracks)
                 
                 # Total runtime in minutes
-                total_runtime = sum(track['runtime'] for track in tracks)
+                total_runtime = sum(track['runtime'] for track in tracks) / 100000
 
                 most_popular_track = max(tracks, key=lambda x: x['popularity'])
                 print(f"Most popular song on {album['name']}: {most_popular_track['name']} - {', '.join(most_popular_track['artists'])}")
@@ -45,7 +45,6 @@ def main():
 
                 total_runtimes.append(total_runtime)
             
-            # Popularity of each album
             plt.bar(album_names, average_popularities)
             plt.xlabel('Album')
             plt.ylabel('Average Popularity')
@@ -54,7 +53,6 @@ def main():
             plt.tight_layout()
             plt.show()
 
-            # Runtime of each album
             plt.bar(album_names, total_runtimes, color='orange')
             plt.xlabel('Album')
             plt.ylabel('Total Runtime (minutes)')
@@ -62,7 +60,6 @@ def main():
             plt.xticks(rotation=45, ha='right')
             plt.tight_layout()
             plt.show()
-
         else:
             print("No albums found.")
     else:
