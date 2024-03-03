@@ -1,4 +1,3 @@
-# access.py
 import requests
 
 class Access:
@@ -33,6 +32,29 @@ class Access:
                          headers=self.headers,
                          params={'include_groups': 'album', 'limit': 50})
         d = r.json()
-
+        
+        albums_data = []
         for album in d['items']:
-            print(album['name'], ' --- ', album['release_date'])
+            album_data = {
+                'name': album['name'],
+                'release_date': album['release_date'],
+                'tracks': self.getTracksForAlbum(album['id'])
+            }
+            albums_data.append(album_data)
+        return albums_data
+
+    def getTracksForAlbum(self, album_id):
+        # pull all tracks for the album
+        r = requests.get(self.BASE_URL + 'albums/' + album_id + '/tracks',
+                         headers=self.headers,
+                         params={'limit': 50})
+        tracks_data = r.json()
+
+        tracks = []
+        for track in tracks_data['items']:
+            track_info = {
+                'name': track['name'],
+                'artists': [artist['name'] for artist in track['artists']]
+            }
+            tracks.append(track_info)
+        return tracks
