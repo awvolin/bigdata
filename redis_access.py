@@ -16,18 +16,14 @@ class Redis_Access:
         self.r.flushdb()
 
         albums_json = json.dumps(albums_data)
-        
-        keys = self.r.keys() 
-        for key in keys:
-            value = self.r.get(key)  
-            print(f'{key}: {value}')
-
         self.r.set(artist_id, albums_json)
         
-        keys = self.r.keys() 
-        for key in keys:
-            value = self.r.get(key)  
-            print(f'{key}:')
-            print(json.dumps(json.loads(value), indent=4))  
-
-            
+    def getValues(self, key):
+        # Retrieve JSON value for the given key
+        value = self.r.get(key)
+        
+        # If value exists, parse JSON and return
+        if value:
+            return json.loads(value)
+        else:
+            return None

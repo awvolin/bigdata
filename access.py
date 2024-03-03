@@ -57,7 +57,8 @@ class Access:
             track_info = self.getTrack(track_id)
             if track_info:
                 tracks.append(track_info)
-            return tracks
+    
+        return tracks 
     
     def getTrack(self, track_id):
         # Get details of an individual track
@@ -69,8 +70,10 @@ class Access:
             track_info = {
                 'name': track_data['name'],
                 'artists': [artist['name'] for artist in track_data['artists']],
-                'popularity': track_data.get('popularity', None)  # Extract popularity field
+                'popularity': track_data.get('popularity', None),
+                'runtime': track_data.get('duration_ms', None)
             }
             return track_info
         else:
             return None
+        
